@@ -1,0 +1,144 @@
+./CNAME:1: Shivani21Sharma.com
+./README.md:1: # Shivani21Sharma
+./about-us.html:9: <title>About Us | Shivani21Sharma Technologies</title>
+./about-us.html:11: content="Discover Shivani21Sharma Technologies - bridging the gap between education and employment with high-quality IT training, live project internships, and expert mentorship.">
+./about-us.html:13: content="About Shivani21Sharma, IT education mission, live project training, IT mentorship, tech careers">
+./about-us.html:14: <meta name="author" content="Shivani21Sharma Technologies">
+./about-us.html:18: <meta property="og:title" content="About Us | Shivani21Sharma Technologies">
+./about-us.html:61: <a href="index.html" class="logo-wrapper" aria-label="Shivani21Sharma Technologies Home">
+./about-us.html:62: <img src="assets/logo.png" alt="Shivani21Sharma Technologies Logo" class="logo-img logo-light">
+./about-us.html:63: <img src="assets/logo-dark.png" alt="Shivani21Sharma Technologies Logo" class="logo-img logo-dark">
+./about-us.html:128: <span>Welcome to Shivani21Sharma Technologies</span>
+./about-us.html:134: At Shivani21Sharma Technologies, we empower students and graduates with real-world technical competence,
+./about-us.html:182: <!-- Why Choose Us Grid (From Shivani21Sharma.com) -->
+./about-us.html:267: <h2 class="section-title">The 4 Pillars of the Shivani21Sharma Method</h2>
+./about-us.html:417: <img src="assets/logo-dark.png" alt="Shivani21Sharma Logo" class="logo-img">
+./about-us.html:420: Shivani21Sharma Technologies bridges academic education and industry careers with live project internships,
+./about-us.html:424: <a href="https://x.com/Shivani21Sharma" target="_blank" rel="noopener noreferrer" class="social-icon"
+./about-us.html:431: <a href="https://www.instagram.com/Shivani21Sharma/" target="_blank" rel="noopener noreferrer"
+./about-us.html:438: <a href="https://www.youtube.com/@Shivani21Sharma" target="_blank" rel="noopener noreferrer"
+./about-us.html:488: <span>info.Shivani21Sharma@gmail.com</span>
+./about-us.html:496: <span>Shivani21Sharma Technologies, IT Innovations Park</span>
+./about-us.html:504: © 2025 Shivani21Sharma Technologies. All rights reserved.
+./about-us.html:517: <a href="https://wa.me/918249952848?text=Hello%2C%20I%20want%20to%20know%20more%20about%20Shivani21Sharma."
+./about-us.html:533: <h3 id="modalTitle">Join Shivani21Sharma Programs</h3>
+./contact.html:9: <title>Contact Us | Admissions & Support | Shivani21Sharma Technologies</title>
+./contact.html:11: content="Contact Shivani21Sharma Technologies for admissions, training program details, internship enrollment, and mentorship support. Reach our team via phone, WhatsApp, or email.">
+./contact.html:13: content="Contact Shivani21Sharma, IT internships inquiry, training phone number, tech support, admissions helpline">
+./contact.html:14: <meta name="author" content="Shivani21Sharma Technologies">
+./contact.html:18: <meta property="og:title" content="Contact Us | Shivani21Sharma Technologies">
+./contact.html:62: <a href="index.html" class="logo-wrapper" aria-label="Shivani21Sharma Technologies Home">
+./contact.html:63: <img src="assets/logo.png" alt="Shivani21Sharma Technologies Logo" class="logo-img logo-light">
+./contact.html:64: <img src="assets/logo-dark.png" alt="Shivani21Sharma Technologies Logo" class="logo-img logo-dark">
+./contact.html:176: <a href="https://wa.me/918249952848?text=Hello%20Shivani21Sharma%2C%20I%20have%20an%20inquiry%20regarding%20programs."
+./contact.html:195: <a href="mailto:info.Shivani21Sharma@gmail.com" class="contact-link"
+./contact.html:196: style="color:#0284C7;">info.Shivani21Sharma@gmail.com &rarr;</a>
+./contact.html:211: <p>Shivani21Sharma Technologies, IT Innovations Park, Jaipur, Rajasthan 302020, India.</p>
+./contact.html:294: <h4 style="font-size: 1.2rem; margin-bottom: 4px;">Shivani21Sharma Technologies Hub</h4>
+./contact.html:305: <iframe title="Shivani21Sharma Location Map"
+./contact.html:363: <span>How can colleges, universities, or training heads partner with Shivani21Sharma?</span>
+./contact.html:369: <strong>info.Shivani21Sharma@gmail.com</strong> with subject line "Campus MOU / Partnership".
+./contact.html:379: Every certificate issued by Shivani21Sharma includes a unique digital verification ID and a scannable QR code.
+./contact.html:381: emailing info.Shivani21Sharma@gmail.com with the Student Certificate ID.
+./contact.html:394: <img src="assets/logo-dark.png" alt="Shivani21Sharma Logo" class="logo-img">
+./contact.html:397: Shivani21Sharma Technologies bridges academic education and industry careers with live project internships,
+./contact.html:401: <a href="https://x.com/Shivani21Sharma" target="_blank" rel="noopener noreferrer" class="social-icon"
+./contact.html:408: <a href="https://www.instagram.com/Shivani21Sharma/" target="_blank" rel="noopener noreferrer"
+./contact.html:415: <a href="https://www.youtube.com/@Shivani21Sharma" target="_blank" rel="noopener noreferrer"
+./contact.html:441: <li><a href="mailto:info.Shivani21Sharma@gmail.com">info.Shivani21Sharma@gmail.com</a></li>
+./contact.html:474: <span>Shivani21Sharma Technologies, IT Innovations Park</span>
+./contact.html:482: © 2025 Shivani21Sharma Technologies. All rights reserved.
+./contact.html:495: <a href="https://wa.me/918249952848?text=Hello%20Shivani21Sharma%2C%20I%20want%20to%20connect%20with%20your%20counselor."
+./index.html:9: <title>Shivani21Sharma Technologies | Live Project IT & AI Internships</title>
+./index.html:11: content="Elevate your IT career with live project internships in Frontend Web Development, Python, Backend, Data Science, Machine Learning, Cloud AI with AWS, Data Analytics, Artificial Intelligence, and Mobile Applications at Shivani21Sharma Technologies.">
+./index.html:14: <meta name="author" content="Shivani21Sharma Technologies">
+./index.html:18: <meta property="og:title" content="Shivani21Sharma Technologies | Live Project Internships">
+./index.html:61: <a href="index.html" class="logo-wrapper" aria-label="Shivani21Sharma Technologies Home">
+./index.html:62: <img src="assets/logo.png" alt="Shivani21Sharma Technologies Logo" class="logo-img logo-light">
+./index.html:63: <img src="assets/logo-dark.png" alt="Shivani21Sharma Technologies Logo" class="logo-img logo-dark">
+./index.html:133: Transform from a student into a job-ready software engineer. Join Shivani21Sharma's immersive, mentor-led live
+./index.html:533: <span class="section-tag">The Shivani21Sharma Standard</span>
+./index.html:649: Shivani21Sharma Technologies.
+./index.html:721: <img src="assets/logo-dark.png" alt="Shivani21Sharma Technologies Logo" class="logo-img">
+./index.html:727: <a href="https://www.youtube.com/@Shivani21Sharma" target="_blank" rel="noopener" class="social-icon"
+./index.html:734: <a href="https://www.instagram.com/Shivani21Sharma/" target="_blank" rel="noopener" class="social-icon"
+./index.html:741: <a href="https://x.com/Shivani21Sharma" target="_blank" rel="noopener" class="social-icon"
+./index.html:748: <a href="https://www.linkedin.com/company/Shivani21Sharma" target="_blank" rel="noopener" class="social-icon"
+./index.html:797: <span>info.Shivani21Sharma@gmail.com</span>
+./index.html:801: <span>Shivani21Sharma Technologies<br>IT Innovations Park, India</span>
+./index.html:809: © 2025 Shivani21Sharma Technologies. All rights reserved.
+./index.html:822: <a href="https://wa.me/918249952848?text=Hello%2C%20I%20want%20to%20know%20more%20about%20Shivani21Sharma%20internships."
+./internships.html:9: <title>Internship Programs | Shivani21Sharma Technologies</title>
+./internships.html:11: content="Explore live project internships in Frontend Web Development, Python Programming, Backend Web Development, Data Science, Machine Learning & AI, Cloud AI with AWS, Data Analytics, Artificial Intelligence, and Mobile Applications at Shivani21Sharma Technologies.">
+./internships.html:14: <meta name="author" content="Shivani21Sharma Technologies">
+./internships.html:18: <meta property="og:title" content="Internship Programs | Shivani21Sharma Technologies">
+./internships.html:62: <a href="index.html" class="logo-wrapper" aria-label="Shivani21Sharma Technologies Home">
+./internships.html:63: <img src="assets/logo.png" alt="Shivani21Sharma Technologies Logo" class="logo-img logo-light">
+./internships.html:64: <img src="assets/logo-dark.png" alt="Shivani21Sharma Technologies Logo" class="logo-img logo-dark">
+./internships.html:595: <img src="assets/logo-dark.png" alt="Shivani21Sharma Technologies Logo" class="logo-img">
+./internships.html:601: <a href="https://www.youtube.com/@Shivani21Sharma" target="_blank" rel="noopener" class="social-icon"
+./internships.html:608: <a href="https://www.instagram.com/Shivani21Sharma/" target="_blank" rel="noopener" class="social-icon"
+./internships.html:615: <a href="https://x.com/Shivani21Sharma" target="_blank" rel="noopener" class="social-icon"
+./internships.html:622: <a href="https://www.linkedin.com/company/Shivani21Sharma" target="_blank" rel="noopener" class="social-icon"
+./internships.html:671: <span>info.Shivani21Sharma@gmail.com</span>
+./internships.html:675: <span>Shivani21Sharma Technologies<br>IT Innovations Park, India</span>
+./internships.html:683: © 2025 Shivani21Sharma Technologies. All rights reserved.
+./internships.html:696: <a href="https://wa.me/918249952848?text=Hello%2C%20I%20want%20to%20know%20more%20about%20Shivani21Sharma%20internships."
+./practice-lab.html:9: <title>Practice Lab & Machines | Interactive Linux & Cloud Notes | Shivani21Sharma</title>
+./practice-lab.html:11: content="Access Shivani21Sharma Practice Lab Machines: Operating System & Linux OST Notes, AWS Cloud Computing Notes, and Cyber Security Practice Labs. Run commands in the live web terminal and code playground.">
+./practice-lab.html:13: content="practice lab, practice machines, linux notes, OST notes, operating systems, cloud notes, cyber security lab, online terminal, Rajendra Jangid, Shivani21Sharma">
+./practice-lab.html:14: <meta name="author" content="Shivani21Sharma Technologies">
+./practice-lab.html:18: <meta property="og:title" content="Practice Lab & Machines | Shivani21Sharma Technologies">
+./practice-lab.html:62: <a href="index.html" class="logo-wrapper" aria-label="Shivani21Sharma Technologies Home">
+./practice-lab.html:63: <img src="assets/logo.png" alt="Shivani21Sharma Technologies Logo" class="logo-img logo-light">
+./practice-lab.html:64: <img src="assets/logo-dark.png" alt="Shivani21Sharma Technologies Logo" class="logo-img logo-dark">
+./practice-lab.html:150: <!-- Machines Grid Section (Matching Shivani21Sharma.com/product.html) -->
+./practice-lab.html:160: Shivani21Sharma Engineering Team.
+./practice-lab.html:368: <div class="terminal-title">student@Shivani21Sharma-lab:~ (bash) — 🟢 Machine 01 Active</div>
+./practice-lab.html:373: Shivani21Sharma Technologies Interactive Lab Shell [v2.4.0-cloud]
+./practice-lab.html:382: <span class="terminal-prompt">student@Shivani21Sharma-lab:~$</span>
+./practice-lab.html:459: <div class="badge">Shivani21Sharma Lab Sandbox</div>
+./practice-lab.html:581: <!-- Lab Mentor Bio & Attribution (Matching Shivani21Sharma.com) -->
+./practice-lab.html:592: Linux System Architect & Cloud Infrastructure Mentor at Shivani21Sharma Technologies. Dedicated to helping
+./practice-lab.html:615: Enroll in any Shivani21Sharma internship or training track to unlock dedicated cloud sandbox pods, private GitHub
+./practice-lab.html:639: <img src="assets/logo-dark.png" alt="Shivani21Sharma Logo" class="logo-img">
+./practice-lab.html:642: Shivani21Sharma Technologies bridges academic education and industry careers with live project internships,
+./practice-lab.html:646: <a href="https://x.com/Shivani21Sharma" target="_blank" rel="noopener noreferrer" class="social-icon"
+./practice-lab.html:653: <a href="https://www.instagram.com/Shivani21Sharma/" target="_blank" rel="noopener noreferrer"
+./practice-lab.html:660: <a href="https://www.youtube.com/@Shivani21Sharma" target="_blank" rel="noopener noreferrer"
+./practice-lab.html:710: <span>info.Shivani21Sharma@gmail.com</span>
+./practice-lab.html:718: <span>Shivani21Sharma Technologies, IT Innovations Park</span>
+./practice-lab.html:726: © 2025 Shivani21Sharma Technologies. All rights reserved.
+./practice-lab.html:739: <a href="https://wa.me/918249952848?text=Hello%20Shivani21Sharma%2C%20I%20am%20interested%20in%20Practice%20Lab%20machines."
+./training.html:9: <title>Training Programs | Boost Your Career Growth | Shivani21Sharma Technologies</title>
+./training.html:13: content="IT training, web development training, python course, data science course, machine learning training, cloud AWS certification, cyber security training, artificial intelligence, Shivani21Sharma Technologies">
+./training.html:14: <meta name="author" content="Shivani21Sharma Technologies">
+./training.html:18: <meta property="og:title" content="Training Programs | Shivani21Sharma Technologies">
+./training.html:62: <a href="index.html" class="logo-wrapper" aria-label="Shivani21Sharma Technologies Home">
+./training.html:63: <img src="assets/logo.png" alt="Shivani21Sharma Technologies Logo" class="logo-img logo-light">
+./training.html:64: <img src="assets/logo-dark.png" alt="Shivani21Sharma Technologies Logo" class="logo-img logo-dark">
+./training.html:550: <!-- Why Shivani21Sharma Training vs College / Self-Study Comparison -->
+./training.html:556: See how learning at Shivani21Sharma compares to traditional college degrees and isolated self-study.
+./training.html:567: <th class="highlight-col">Shivani21Sharma Technologies</th>
+./training.html:612: <!-- Direct Inquiry Banner Matching Shivani21Sharma.com -->
+./training.html:630: <a href="https://wa.me/918249952848?text=Hello%20Shivani21Sharma%2C%20I%20am%20interested%20in%20your%20training%20programs."
+./training.html:652: <a href="mailto:info.Shivani21Sharma@gmail.com" class="inquiry-item">
+./training.html:662: <div style="font-size:15px; font-weight:700; color:#FFFFFF;">info.Shivani21Sharma@gmail.com</div>
+./training.html:684: <span>What makes Shivani21Sharma training different from generic online tutorials?</span>
+./training.html:688: Generic courses simply show recorded videos with toy exercises. At Shivani21Sharma, you are paired with a
+./training.html:762: <img src="assets/logo-dark.png" alt="Shivani21Sharma Logo" class="logo-img">
+./training.html:765: Shivani21Sharma Technologies bridges academic education and industry careers with live project internships,
+./training.html:769: <a href="https://x.com/Shivani21Sharma" target="_blank" rel="noopener noreferrer" class="social-icon"
+./training.html:776: <a href="https://www.instagram.com/Shivani21Sharma/" target="_blank" rel="noopener noreferrer"
+./training.html:783: <a href="https://www.youtube.com/@Shivani21Sharma" target="_blank" rel="noopener noreferrer"
+./training.html:834: <span>info.Shivani21Sharma@gmail.com</span>
+./training.html:842: <span>Shivani21Sharma Technologies, IT Innovations Park</span>
+./training.html:850: © 2025 Shivani21Sharma Technologies. All rights reserved.
+./training.html:863: <a href="https://wa.me/918249952848?text=Hello%2C%20I%20want%20to%20know%20more%20about%20Shivani21Sharma%20training%20programs."
+./js/main.js:2: * Shivani21Sharma Technologies - Main Application Script
+./js/main.js:245: echoLine.innerHTML = `<span class="terminal-prompt">student@Shivani21Sharma-lab:~$</span> ${escapeHTML(cmd)}`;
+./js/main.js:274: [OST Notes - Shivani21Sharma Lab]<br>
+./js/main.js:292: responseHTML = `<div style="color: #60A5FA; margin-bottom: 8px;">Python 3.12.2 (Shivani21Sharma Lab Shell). Type "print('Hello')" in the Playground below!</div>`;
+./assets/logo-dark.svg:45: <!-- Typography: Shivani21Sharma -->
+./assets/logo.svg:46: <!-- Typography: Shivani21Sharma -->
+./css/index.css:2: Shivani21Sharma Technologies - Modern & Clean Design System
