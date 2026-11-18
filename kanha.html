@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Razorpay QR Cross-Check Dashboard</title>
+    <!-- Tailwind CSS for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 min-h-screen py-10 px-4">
+
+    <div class="max-w-xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden p-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center border-b pb-4 mb-6">
+            <div>
+                <h1 id="qrName" class="text-xl font-bold text-slate-800">Loading QR...</h1>
+                <p class="text-xs text-slate-500">ID: <span id="qrIdDisplay">qr_U1MQsgwOfABmJ8</span></p>
+            </div>
+            <span id="qrStatus" class="px-3 py-1 text-xs font-semibold rounded-full bg-slate-200 text-slate-700 uppercase">Loading</span>
+        </div>
+
+        <!-- QR Code & Summary Section -->
+        <div class="flex flex-col sm:flex-row items-center gap-6 bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6">
+            <div class="bg-white p-2 rounded-lg shadow-sm border">
+                <img id="qrImage" src="" alt="Payment QR Code" class="w-40 h-40 object-contain">
+            </div>
+            <div class="flex-1 w-full space-y-2 text-center sm:text-left">
+                <div>
+                    <p class="text-xs text-slate-500 uppercase tracking-wider">Total Amount Received</p>
+                    <p id="totalAmount" class="text-3xl font-extrabold text-emerald-600">₹0.00</p>
+                </div>
+                <div class="text-sm text-slate-600">
+                    <p>Usage: <span id="qrUsage" class="font-medium text-slate-800">-</span></p>
+                    <p>Payments Count: <span id="paymentsCount" class="font-medium text-slate-800">0</span></p>
+                </div>
+                <button onclick="refreshPaymentStatus()" id="refreshBtn" class="w-full sm:w-auto mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 rounded-lg text-sm transition flex items-center justify-center gap-2 shadow">
+                    <svg id="spinner" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Check / Refresh Payment
+                </button>
+            </div>g
+        </div>
+
+        <!-- Payment History Table -->
+        <div>
+            <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-3">Transaction History</h3>
+            <div class="overflow-x-auto border border-slate-200 rounded-lg">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-100 text-xs font-semibold text-slate-600 uppercase">
+                            <th class="p-3">Payer UPI (VPA)</th>
+                            <th class="p-3">Amount</th>
+                            <th class="p-3">Status</th>
+                            <th class="p-3">Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="paymentsTableBody" class="divide-y divide-slate-200 text-sm">
+                        <!-- Dynamic rows will be injected here -->
+                        <tr>
+                            <td colspan="4" class="p-4 text-center text-slate-400">No payments loaded yet. Click refresh.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Error / Status Message Box -->
+        <div id="messageBox" class="mt-4 hidden p-3 rounded-lg text-xs"></div>
+    </div>
+
+    <script>
+        // Change this if your server runs on a different port or domain
+        const SERVER_URL = "https://razor.shivani21sharma.shop"; 
+        const QR_ID = "qr_U1ceeUbPZdSt8k";
+
+        async function refreshPaymentStatus() {
+            const btn = document.getElementById('refreshBtn');
+            const spinner = document.getElementById('spinner');
+            const msgBox = document.getElementById('messageBox');
+
+            // Show loading state
+            btn.disabled = true;
+            spinner.classList.remove('hidden');
+            msgBox.classList.add('hidden');
+
+            try {
+                // Sending POST request as requested
+                const response = await fetch(`${SERVER_URL}/api/qr/refresh/${QR_ID}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    updateUI(result.data);
+                    showToast("Payment status successfully synced!", "success");
+                } else {
+                    showToast("Failed to sync: " + (result.error || "Unknown error"), "error");
+                }
+            } catch (error) {
+                console.error("Network error:", error);
+                showToast("Could not connect to backend server. Make sure your EC2/local server is running.", "error");
+            } finally {
+                btn.disabled = false;
+                spinner.classList.add('hidden');
+            }
+        }
+
+        function updateUI(data) {
+            document.getElementById('qrName').innerText = data.name;
+            document.getElementById('qrIdDisplay').innerText = data.razorpayQrId;
+            document.getElementById('qrImage').src = data.imageUrl;
+            document.getElementById('totalAmount').innerText = `₹${data.totalAmountReceived.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+            document.getElementById('qrUsage').innerText = data.usage === 'multiple_use' ? 'Multiple Use' : 'Single Use';
+            document.getElementById('paymentsCount').innerText = data.paymentsCount;
+
+            const badge = document.getElementById('qrStatus');
+            badge.innerText = data.status;
+            if (data.status === 'active') {
+                badge.className = "px-3 py-1 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-700 uppercase";
+            } else {
+                badge.className = "px-3 py-1 text-xs font-semibold rounded-full bg-rose-100 text-rose-700 uppercase";
+            }
+
+            // Populate Table
+            const tbody = document.getElementById('paymentsTableBody');
+            tbody.innerHTML = '';
+
+            if (!data.payments || data.payments.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400">No payments found yet.</td></tr>`;
+                return;
+            }
+
+            data.payments.forEach(pay => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition";
+                
+                const formattedDate = new Date(pay.createdAt).toLocaleString('en-IN', {
+                    day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                });
+
+                tr.innerHTML = `
+                    <td class="p-3 font-medium text-slate-700">${pay.vpa || 'N/A'}</td>
+                    <td class="p-3 font-bold text-emerald-600">₹${pay.amount.toFixed(2)}</td>
+                    <td class="p-3"><span class="px-2 py-0.5 text-xs bg-emerald-50 text-emerald-600 rounded font-medium uppercase">${pay.status}</span></td>
+                    <td class="p-3 text-xs text-slate-500">${formattedDate}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function showToast(text, type) {
+            const box = document.getElementById('messageBox');
+            box.innerText = text;
+            box.classList.remove('hidden', 'bg-emerald-50', 'text-emerald-700', 'bg-rose-50', 'text-rose-700');
+            if (type === 'success') {
+                box.classList.add('bg-emerald-50', 'text-emerald-700');
+            } else {
+                box.classList.add('bg-rose-50', 'text-rose-700');
+            }
+        }
+
+        // Optional: Auto-trigger refresh once when page opens so it loads latest data immediately
+        window.onload = () => {
+            refreshPaymentStatus();
+        };
+    </script>
+</body>
+</html>
