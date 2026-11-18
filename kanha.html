@@ -16,7 +16,7 @@
         <div class="flex justify-between items-center border-b pb-4 mb-6">
             <div>
                 <h1 id="qrName" class="text-xl font-bold text-slate-800">Loading QR...</h1>
-                <p class="text-xs text-slate-500">ID: <span id="qrIdDisplay">qr_U1MQsgwOfABmJ8</span></p>
+                <p class="text-xs text-slate-500">ID: <span id="qrIdDisplay">Loading...</span></p>
             </div>
             <div class="flex items-center gap-2">
                 <!-- Live Connection Badge -->
@@ -79,18 +79,23 @@
 
     <script>
         const SERVER_URL = "https://razor.shivani21sharma.shop"; 
-        const QR_ID = "qr_U1ceeUbPZdSt8k";
-        
-        // ⚠️ Set the logged-in user's ID here (e.g., fetched from local storage, session, or URL params)
-        const CURRENT_USER_ID = "YOUR_LOGGED_IN_USER_ID"; 
+
+        // Extract dynamic parameters from URL (e.g. ?userId=user_12345&qrId=qr_U1ceeUbPZdSt8k)
+        const urlParams = new URLSearchParams(window.location.search);
+        const CURRENT_USER_ID = urlParams.get('userId') || "user_12345"; // fallback if not provided
+        const QR_ID = urlParams.get('qrId') || "qr_U1ceeUbPZdSt8k";       // fallback if not provided
+
+        // Display current target QR ID on screen
+        document.getElementById('qrIdDisplay').innerText = QR_ID;
 
         // 1. Initialize Socket.io Connection
         const socket = io(SERVER_URL);
 
         socket.on('connect', () => {
-            // Join this specific user's personal room on the server backend
-            if (CURRENT_USER_ID && CURRENT_USER_ID !== "YOUR_LOGGED_IN_USER_ID") {
+            // Join this specific client's dynamic room on the server backend
+            if (CURRENT_USER_ID) {
                 socket.emit('join_user_room', CURRENT_USER_ID);
+                console.log(`Joined socket room for user: ${CURRENT_USER_ID}`);
             }
 
             const badge = document.getElementById('connectionBadge');
@@ -104,7 +109,7 @@
             badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Disconnected`;
         });
 
-        // 2. Listen for Real-Time Payment Event targeted to this user's room
+        // 2. Listen for Real-Time Payment Event targeted to this specific client's room
         socket.on('new_payment_received', (data) => {
             console.log("Real-time payment notification received:", data);
             
@@ -118,7 +123,7 @@
             refreshPaymentStatus();
         });
 
-        // Helper: Web Audio API tone generator (no extra sound files needed)
+        // Helper: Web Audio API tone generator
         function playAlertSound() {
             try {
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -133,7 +138,7 @@
                 gainNode.connect(audioCtx.destination);
 
                 oscillator.start();
-                oscillator.stop(audioCtx.currentTime + 0.3); // 300ms duration
+                oscillator.stop(audioCtx.currentTime + 0.3);
             } catch (e) {
                 console.error("Audio playback error:", e);
             }
@@ -226,7 +231,6 @@
             }
         }
 
-        // Auto-trigger refresh once when page opens to load initial state
         window.onload = () => {
             refreshPaymentStatus();
         };

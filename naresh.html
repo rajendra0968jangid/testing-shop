@@ -80,7 +80,7 @@
     <script>
         const SERVER_URL = "https://razor.shivani21sharma.shop"; 
         const QR_ID = "qr_U1MQsgwOfABmJ8"; // Matching your database record
-        const CURRENT_USER_ID = "user_12345"; // Extracted from your database record userId
+        const CURRENT_USER_ID = "user_12345"; // Clean user ID from database
 
         // 1. Initialize Socket.io Connection
         const socket = io(SERVER_URL);
@@ -114,7 +114,7 @@
             refreshPaymentStatus();
         });
 
-        // Helper: Web Audio API chime generator (no external mp3 files needed)
+        // Helper: Web Audio API chime generator
         function playAlertSound() {
             try {
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -129,7 +129,7 @@
                 gainNode.connect(audioCtx.destination);
 
                 oscillator.start();
-                oscillator.stop(audioCtx.currentTime + 0.3); // 300ms duration
+                oscillator.stop(audioCtx.currentTime + 0.3);
             } catch (e) {
                 console.error("Audio playback error:", e);
             }
@@ -184,7 +184,6 @@
                 badge.className = "px-3 py-1 text-xs font-semibold rounded-full bg-rose-100 text-rose-700 uppercase";
             }
 
-            // Populate Table
             const tbody = document.getElementById('paymentsTableBody');
             tbody.innerHTML = '';
 
@@ -222,7 +221,6 @@
             }
         }
 
-        // Auto-trigger refresh once when page opens to load initial state
         window.onload = () => {
             refreshPaymentStatus();
         };
