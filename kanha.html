@@ -178,10 +178,17 @@
         }
 
         function updateUI(data) {
+            const deposit = 1100 + (1100) * 0.05;
+
+            const totalAmount = data.totalAmountReceived - deposit;
+
             document.getElementById('qrName').innerText = data.name;
             document.getElementById('qrIdDisplay').innerText = data.razorpayQrId;
             document.getElementById('qrImage').src = data.imageUrl;
-            document.getElementById('totalAmount').innerText = `₹${data.totalAmountReceived.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+            document.getElementById('totalAmount').innerText =
+                `₹${totalAmount.toLocaleString('en-IN', {
+                    minimumFractionDigits: 2
+                })}`;
             document.getElementById('qrUsage').innerText = data.usage === 'multiple_use' ? 'Multiple Use' : 'Single Use';
             document.getElementById('paymentsCount').innerText = data.paymentsCount;
 

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <!-- Socket.io Client Script -->
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 </head>
+
 <body class="bg-slate-100 min-h-screen py-10 px-4">
 
     <div class="max-w-xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden p-6">
@@ -20,15 +22,18 @@
             </div>
             <div class="flex items-center gap-2">
                 <!-- Live Connection Badge -->
-                <span id="connectionBadge" class="px-2.5 py-1 text-[10px] font-semibold rounded-full bg-amber-100 text-amber-700 uppercase flex items-center gap-1.5">
+                <span id="connectionBadge"
+                    class="px-2.5 py-1 text-[10px] font-semibold rounded-full bg-amber-100 text-amber-700 uppercase flex items-center gap-1.5">
                     <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span> Connecting...
                 </span>
-                <span id="qrStatus" class="px-3 py-1 text-xs font-semibold rounded-full bg-slate-200 text-slate-700 uppercase">Loading</span>
+                <span id="qrStatus"
+                    class="px-3 py-1 text-xs font-semibold rounded-full bg-slate-200 text-slate-700 uppercase">Loading</span>
             </div>
         </div>
 
         <!-- QR Code & Summary Section -->
-        <div class="flex flex-col sm:flex-row items-center gap-6 bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6">
+        <div
+            class="flex flex-col sm:flex-row items-center gap-6 bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6">
             <div class="bg-white p-2 rounded-lg shadow-sm border">
                 <img id="qrImage" src="" alt="Payment QR Code" class="w-40 h-40 object-contain">
             </div>
@@ -41,10 +46,15 @@
                     <p>Usage: <span id="qrUsage" class="font-medium text-slate-800">-</span></p>
                     <p>Payments Count: <span id="paymentsCount" class="font-medium text-slate-800">0</span></p>
                 </div>
-                <button onclick="refreshPaymentStatus()" id="refreshBtn" class="w-full sm:w-auto mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 rounded-lg text-sm transition flex items-center justify-center gap-2 shadow">
-                    <svg id="spinner" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <button onclick="refreshPaymentStatus()" id="refreshBtn"
+                    class="w-full sm:w-auto mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 rounded-lg text-sm transition flex items-center justify-center gap-2 shadow">
+                    <svg id="spinner" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white hidden"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                        </circle>
+                        <path class="opacity-75" fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                        </path>
                     </svg>
                     Check / Refresh Payment
                 </button>
@@ -66,19 +76,20 @@
                     </thead>
                     <tbody id="paymentsTableBody" class="divide-y divide-slate-200 text-sm">
                         <tr>
-                            <td colspan="4" class="p-4 text-center text-slate-400">No payments loaded yet. Click refresh.</td>
+                            <td colspan="4" class="p-4 text-center text-slate-400">No payments loaded yet. Click
+                                refresh.</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-        
+
         <!-- Error / Status Message Box -->
         <div id="messageBox" class="mt-4 hidden p-3 rounded-lg text-xs"></div>
     </div>
 
     <script>
-        const SERVER_URL = "https://razor.shivani21sharma.shop"; 
+        const SERVER_URL = "https://razor.shivani21sharma.shop";
         const QR_ID = "qr_U1MQsgwOfABmJ8"; // Matching your database record
         const CURRENT_USER_ID = "user_12345"; // Clean user ID from database
 
@@ -103,7 +114,7 @@
         // 2. Listen for Real-Time Payment Notifications from your Server Webhook
         socket.on('new_payment_received', (data) => {
             console.log("Real-time payment notification received:", data);
-            
+
             // Play notification sound
             playAlertSound();
 
@@ -169,10 +180,16 @@
         }
 
         function updateUI(data) {
+            const deposit = 5000 + (1500 + 3500) * 0.05;
+
+            const totalAmount = data.totalAmountReceived - deposit;
             document.getElementById('qrName').innerText = data.name;
             document.getElementById('qrIdDisplay').innerText = data.razorpayQrId;
             document.getElementById('qrImage').src = data.imageUrl;
-            document.getElementById('totalAmount').innerText = `₹${data.totalAmountReceived.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+            document.getElementById('totalAmount').innerText =
+                `₹${totalAmount.toLocaleString('en-IN', {
+                    minimumFractionDigits: 2
+                })}`;
             document.getElementById('qrUsage').innerText = data.usage === 'multiple_use' ? 'Multiple Use' : 'Single Use';
             document.getElementById('paymentsCount').innerText = data.paymentsCount;
 
@@ -195,7 +212,7 @@
             data.payments.forEach(pay => {
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition";
-                
+
                 const formattedDate = new Date(pay.createdAt).toLocaleString('en-IN', {
                     day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
                 });
@@ -226,4 +243,5 @@
         };
     </script>
 </body>
+
 </html>
