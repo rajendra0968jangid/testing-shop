@@ -15,12 +15,17 @@
 
     <div class="max-w-xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden p-6">
         <!-- Header -->
-        <div class="flex justify-between items-center border-b pb-4 mb-6">
+        <div class="flex flex-wrap justify-between items-center gap-2 border-b pb-4 mb-6">
             <div>
                 <h1 id="qrName" class="text-xl font-bold text-slate-800">Loading QR...</h1>
                 <p class="text-xs text-slate-500">ID: <span id="qrIdDisplay">qr_U1MQsgwOfABmJ8</span></p>
             </div>
             <div class="flex items-center gap-2">
+                <!-- Push Notification Toggle Button -->
+                <button onclick="togglePushNotifications()" id="pushBtn"
+                    class="px-2.5 py-1 text-[10px] font-semibold rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 uppercase flex items-center gap-1 transition border border-slate-300">
+                    <span id="pushIcon">🔕</span> <span id="pushBtnText">Enable Alerts</span>
+                </button>
                 <!-- Live Connection Badge -->
                 <span id="connectionBadge"
                     class="px-2.5 py-1 text-[10px] font-semibold rounded-full bg-amber-100 text-amber-700 uppercase flex items-center gap-1.5">
@@ -119,11 +124,126 @@
             playAlertSound();
 
             // Show Toast Alert Banner
-            showToast(`🔔 New payment of ₹${data.amount.toFixed(2)} received from ${data.vpa}!`, "success");
+            showToast(`🔔 New payment of ₹${Number(data.amount).toFixed(2)} received from ${data.vpa}!`, "success");
 
             // Automatically trigger data refresh to sync the table and totals instantly
             refreshPaymentStatus();
         });
+
+        // ==========================================
+        // 3. REAL-TIME WEB PUSH SUBSCRIPTION LOGIC
+        // ==========================================
+        function urlBase64ToUint8Array(base64String) {
+            const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+            const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+            const rawData = window.atob(base64);
+            return Uint8Array.from([...rawData].map((char) => char.charCodeAt(0)));
+        }
+
+        function setPushButtonUI(isSubscribed) {
+            const btn = document.getElementById('pushBtn');
+            const icon = document.getElementById('pushIcon');
+            const text = document.getElementById('pushBtnText');
+
+            if (isSubscribed) {
+                btn.className = "px-2.5 py-1 text-[10px] font-semibold rounded-full bg-indigo-100 hover:bg-indigo-200 text-indigo-700 uppercase flex items-center gap-1 transition border border-indigo-200";
+                icon.innerText = "🔔";
+                text.innerText = "Alerts On";
+            } else {
+                btn.className = "px-2.5 py-1 text-[10px] font-semibold rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 uppercase flex items-center gap-1 transition border border-slate-300";
+                icon.innerText = "🔕";
+                text.innerText = "Enable Alerts";
+            }
+        }
+
+        async function initPushState() {
+            if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+                document.getElementById('pushBtn').classList.add('hidden');
+                return;
+            }
+
+            try {
+                const registration = await navigator.serviceWorker.register('/sw.js');
+                const existingSub = await registration.pushManager.getSubscription();
+                setPushButtonUI(Boolean(existingSub));
+
+                if (existingSub) {
+                    await fetch(`${SERVER_URL}/api/push/subscribe`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            userId: CURRENT_USER_ID,
+                            subscription: existingSub
+                        })
+                    });
+                }
+            } catch (err) {
+                console.error("Service Worker registration error:", err);
+            }
+        }
+
+        async function togglePushNotifications() {
+            if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+                showToast("Push notifications are not supported in this browser.", "error");
+                return;
+            }
+
+            try {
+                const registration = await navigator.serviceWorker.register('/sw.js');
+                await navigator.serviceWorker.ready;
+
+                const existingSub = await registration.pushManager.getSubscription();
+
+                if (existingSub) {
+                    await fetch(`${SERVER_URL}/api/push/unsubscribe`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ endpoint: existingSub.endpoint })
+                    });
+                    await existingSub.unsubscribe();
+                    setPushButtonUI(false);
+                    showToast("Background push alerts disabled.", "success");
+                    return;
+                }
+
+                const permission = await Notification.requestPermission();
+                if (permission !== 'granted') {
+                    showToast("Notification permission denied by browser.", "error");
+                    return;
+                }
+
+                const keyRes = await fetch(`${SERVER_URL}/api/push/vapid-public-key`);
+                const { publicKey, error } = await keyRes.json();
+                if (!publicKey) {
+                    showToast(error || "Backend VAPID key not configured.", "error");
+                    return;
+                }
+
+                const subscription = await registration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: urlBase64ToUint8Array(publicKey)
+                });
+
+                const subRes = await fetch(`${SERVER_URL}/api/push/subscribe`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: CURRENT_USER_ID,
+                        subscription
+                    })
+                });
+
+                if (subRes.ok) {
+                    setPushButtonUI(true);
+                    showToast("🔔 Real-time push notifications enabled!", "success");
+                } else {
+                    showToast("Failed to save push subscription on server.", "error");
+                }
+            } catch (err) {
+                console.error("Push toggle error:", err);
+                showToast("Error configuring push notifications: " + err.message, "error");
+            }
+        }
 
         // Helper: Web Audio API chime generator
         function playAlertSound() {
@@ -240,6 +360,7 @@
 
         window.onload = () => {
             refreshPaymentStatus();
+            initPushState();
         };
     </script>
 </body>
