@@ -276,7 +276,7 @@
             msgBox.classList.add('hidden');
 
             try {
-                const response = await fetch(`${SERVER_URL}/api/qr/refresh/${QR_ID}`, {
+                const response = await fetch(`${SERVER_URL}/api/qr/refresh/${QR_ID}?count=100&skip=0`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
