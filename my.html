@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Razorpay QR Cross-Check Dashboard</title>
+    <!-- Tailwind CSS for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Socket.io Client Script -->
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+
+<body class="bg-slate-100 min-h-screen py-10 px-4">
+
+    <div class="max-w-xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden p-6">
+        <!-- Header -->
+        <div class="flex flex-wrap justify-between items-center gap-2 border-b pb-4 mb-6">
+            <div>
+                <h1 id="qrName" class="text-xl font-bold text-slate-800">Loading QR...</h1>
+                <p class="text-xs text-slate-500">ID: <span id="qrIdDisplay">qr_U1MQsgwOfABmJ8</span></p>
+            </div>
+            <div class="flex items-center gap-2">
+                <!-- Push Notification Toggle Button -->
+                <button onclick="togglePushNotifications()" id="pushBtn"
+                    class="px-2.5 py-1 text-[10px] font-semibold rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 uppercase flex items-center gap-1 transition border border-slate-300">
+                    <span id="pushIcon">🔕</span> <span id="pushBtnText">Enable Alerts</span>
+                </button>
+                <!-- Live Connection Badge -->
+                <span id="connectionBadge"
+                    class="px-2.5 py-1 text-[10px] font-semibold rounded-full bg-amber-100 text-amber-700 uppercase flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span> Connecting...
+                </span>
+                <span id="qrStatus"
+                    class="px-3 py-1 text-xs font-semibold rounded-full bg-slate-200 text-slate-700 uppercase">Loading</span>
+            </div>
+        </div>
+
+        <!-- QR Code & Summary Section -->
+        <div
+            class="flex flex-col sm:flex-row items-center gap-6 bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6">
+            <div class="bg-white p-2 rounded-lg shadow-sm border">
+                <img id="qrImage" src="" alt="Payment QR Code" class="w-40 h-40 object-contain">
+            </div>
+            <div class="flex-1 w-full space-y-2 text-center sm:text-left">
+                <div>
+                    <p class="text-xs text-slate-500 uppercase tracking-wider">Total Amount Received</p>
+                    <p id="totalAmount" class="text-3xl font-extrabold text-emerald-600">₹0.00</p>
+                </div>
+                <div class="text-sm text-slate-600">
+                    <p>Usage: <span id="qrUsage" class="font-medium text-slate-800">-</span></p>
+                    <p>Payments Count: <span id="paymentsCount" class="font-medium text-slate-800">0</span></p>
+                </div>
+                <button onclick="refreshPaymentStatus()" id="refreshBtn"
+                    class="w-full sm:w-auto mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 rounded-lg text-sm transition flex items-center justify-center gap-2 shadow">
+                    <svg id="spinner" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white hidden"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                        </circle>
+                        <path class="opacity-75" fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                        </path>
+                    </svg>
+                    Check / Refresh Payment
+                </button>
+            </div>
+        </div>
+
+        <!-- Payment History Table -->
+        <div>
+            <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-3">Transaction History</h3>
+            <div class="overflow-x-auto border border-slate-200 rounded-lg">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-100 text-xs font-semibold text-slate-600 uppercase">
+                            <th class="p-3">Payer UPI (VPA)</th>
+                            <th class="p-3">Amount</th>
+                            <th class="p-3">Status</th>
+                            <th class="p-3">Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="paymentsTableBody" class="divide-y divide-slate-200 text-sm">
+                        <tr>
+                            <td colspan="4" class="p-4 text-center text-slate-400">No payments loaded yet. Click
+                                refresh.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Error / Status Message Box -->
+        <div id="messageBox" class="mt-4 hidden p-3 rounded-lg text-xs"></div>
+    </div>
+
+    <script>
+        const SERVER_URL = "https://razor.shivani21sharma.shop";
+        const QR_ID = "qr_U3c0lzZb2LnNrI"; // Matching your database record
+        const CURRENT_USER_ID = "vishal_12345"; // Clean user ID from database
+
+        // 1. Initialize Socket.io Connection
+        const socket = io(SERVER_URL);
+
+        socket.on('connect', () => {
+            // Join your specific user room on the server backend
+            socket.emit('join_user_room', CURRENT_USER_ID);
+
+            const badge = document.getElementById('connectionBadge');
+            badge.className = "px-2.5 py-1 text-[10px] font-semibold rounded-full bg-emerald-100 text-emerald-700 uppercase flex items-center gap-1.5";
+            badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Live Connected`;
+        });
+
+        socket.on('disconnect', () => {
+            const badge = document.getElementById('connectionBadge');
+            badge.className = "px-2.5 py-1 text-[10px] font-semibold rounded-full bg-rose-100 text-rose-700 uppercase flex items-center gap-1.5";
+            badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Disconnected`;
+        });
+
+        // 2. Listen for Real-Time Payment Notifications from your Server Webhook
+        socket.on('new_payment_received', (data) => {
+            console.log("Real-time payment notification received:", data);
+
+            // Play notification sound
+            playAlertSound();
+
+            // Show Toast Alert Banner
+            showToast(`🔔 New payment of ₹${Number(data.amount).toFixed(2)} received from ${data.vpa}!`, "success");
+
+            // Automatically trigger data refresh to sync the table and totals instantly
+            refreshPaymentStatus();
+        });
+
+        // ==========================================
+        // 3. REAL-TIME WEB PUSH SUBSCRIPTION LOGIC
+        // ==========================================
+        function urlBase64ToUint8Array(base64String) {
+            const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+            const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+            const rawData = window.atob(base64);
+            return Uint8Array.from([...rawData].map((char) => char.charCodeAt(0)));
+        }
+
+        function setPushButtonUI(isSubscribed) {
+            const btn = document.getElementById('pushBtn');
+            const icon = document.getElementById('pushIcon');
+            const text = document.getElementById('pushBtnText');
+
+            if (isSubscribed) {
+                btn.className = "px-2.5 py-1 text-[10px] font-semibold rounded-full bg-indigo-100 hover:bg-indigo-200 text-indigo-700 uppercase flex items-center gap-1 transition border border-indigo-200";
+                icon.innerText = "🔔";
+                text.innerText = "Alerts On";
+            } else {
+                btn.className = "px-2.5 py-1 text-[10px] font-semibold rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 uppercase flex items-center gap-1 transition border border-slate-300";
+                icon.innerText = "🔕";
+                text.innerText = "Enable Alerts";
+            }
+        }
+
+        async function initPushState() {
+            if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+                document.getElementById('pushBtn').classList.add('hidden');
+                return;
+            }
+
+            try {
+                const registration = await navigator.serviceWorker.register('/sw.js');
+                const existingSub = await registration.pushManager.getSubscription();
+                setPushButtonUI(Boolean(existingSub));
+
+                if (existingSub) {
+                    await fetch(`${SERVER_URL}/api/push/subscribe`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            userId: CURRENT_USER_ID,
+                            subscription: existingSub
+                        })
+                    });
+                }
+            } catch (err) {
+                console.error("Service Worker registration error:", err);
+            }
+        }
+
+        async function togglePushNotifications() {
+            if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+                showToast("Push notifications are not supported in this browser.", "error");
+                return;
+            }
+
+            try {
+                const registration = await navigator.serviceWorker.register('/sw.js');
+                await navigator.serviceWorker.ready;
+
+                const existingSub = await registration.pushManager.getSubscription();
+
+                if (existingSub) {
+                    await fetch(`${SERVER_URL}/api/push/unsubscribe`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ endpoint: existingSub.endpoint })
+                    });
+                    await existingSub.unsubscribe();
+                    setPushButtonUI(false);
+                    showToast("Background push alerts disabled.", "success");
+                    return;
+                }
+
+                const permission = await Notification.requestPermission();
+                if (permission !== 'granted') {
+                    showToast("Notification permission denied by browser.", "error");
+                    return;
+                }
+
+                const keyRes = await fetch(`${SERVER_URL}/api/push/vapid-public-key`);
+                const { publicKey, error } = await keyRes.json();
+                if (!publicKey) {
+                    showToast(error || "Backend VAPID key not configured.", "error");
+                    return;
+                }
+
+                const subscription = await registration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: urlBase64ToUint8Array(publicKey)
+                });
+
+                const subRes = await fetch(`${SERVER_URL}/api/push/subscribe`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: CURRENT_USER_ID,
+                        subscription
+                    })
+                });
+
+                if (subRes.ok) {
+                    setPushButtonUI(true);
+                    showToast("🔔 Real-time push notifications enabled!", "success");
+                } else {
+                    showToast("Failed to save push subscription on server.", "error");
+                }
+            } catch (err) {
+                console.error("Push toggle error:", err);
+                showToast("Error configuring push notifications: " + err.message, "error");
+            }
+        }
+
+        // Helper: Web Audio API chime generator
+        function playAlertSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5 note
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            } catch (e) {
+                console.error("Audio playback error:", e);
+            }
+        }
+
+        async function refreshPaymentStatus() {
+            const btn = document.getElementById('refreshBtn');
+            const spinner = document.getElementById('spinner');
+            const msgBox = document.getElementById('messageBox');
+
+            btn.disabled = true;
+            spinner.classList.remove('hidden');
+            msgBox.classList.add('hidden');
+
+            try {
+                const response = await fetch(`${SERVER_URL}/api/qr/refresh/${QR_ID}?count=100&skip=0`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    updateUI(result.data);
+                } else {
+                    showToast("Failed to sync: " + (result.error || "Unknown error"), "error");
+                }
+            } catch (error) {
+                console.error("Network error:", error);
+                showToast("Could not connect to backend server.", "error");
+            } finally {
+                btn.disabled = false;
+                spinner.classList.add('hidden');
+            }
+        }
+
+        function updateUI(data) {
+            const deposit = 0;
+
+            const totalAmount = data.totalAmountReceived - deposit;
+            document.getElementById('qrName').innerText = data.name;
+            document.getElementById('qrIdDisplay').innerText = data.razorpayQrId;
+            document.getElementById('qrImage').src = data.imageUrl;
+            document.getElementById('totalAmount').innerText =
+                `₹${totalAmount.toLocaleString('en-IN', {
+                    minimumFractionDigits: 2
+                })}`;
+            document.getElementById('qrUsage').innerText = data.usage === 'multiple_use' ? 'Multiple Use' : 'Single Use';
+            document.getElementById('paymentsCount').innerText = data.paymentsCount;
+
+            const badge = document.getElementById('qrStatus');
+            badge.innerText = data.status;
+            if (data.status === 'active') {
+                badge.className = "px-3 py-1 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-700 uppercase";
+            } else {
+                badge.className = "px-3 py-1 text-xs font-semibold rounded-full bg-rose-100 text-rose-700 uppercase";
+            }
+
+            const tbody = document.getElementById('paymentsTableBody');
+            tbody.innerHTML = '';
+
+            if (!data.payments || data.payments.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400">No payments found yet.</td></tr>`;
+                return;
+            }
+
+            data.payments.forEach(pay => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition";
+
+                const formattedDate = new Date(pay.createdAt).toLocaleString('en-IN', {
+                    day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                });
+
+                tr.innerHTML = `
+                    <td class="p-3 font-medium text-slate-700">${pay.vpa || 'N/A'}</td>
+                    <td class="p-3 font-bold text-emerald-600">₹${pay.amount.toFixed(2)}</td>
+                    <td class="p-3"><span class="px-2 py-0.5 text-xs bg-emerald-50 text-emerald-600 rounded font-medium uppercase">${pay.status}</span></td>
+                    <td class="p-3 text-xs text-slate-500">${formattedDate}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function showToast(text, type) {
+            const box = document.getElementById('messageBox');
+            box.innerText = text;
+            box.classList.remove('hidden', 'bg-emerald-50', 'text-emerald-700', 'bg-rose-50', 'text-rose-700');
+            if (type === 'success') {
+                box.classList.add('bg-emerald-50', 'text-emerald-700');
+            } else {
+                box.classList.add('bg-rose-50', 'text-rose-700');
+            }
+        }
+
+        window.onload = () => {
+            refreshPaymentStatus();
+            initPushState();
+        };
+    </script>
+</body>
+
+</html>
