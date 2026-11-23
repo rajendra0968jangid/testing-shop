@@ -95,8 +95,8 @@
 
     <script>
         const SERVER_URL = "https://razor.shivani21sharma.shop";
-        const QR_ID = "qr_U1MQsgwOfABmJ8"; // Matching your database record
-        const CURRENT_USER_ID = "user_12345"; // Clean user ID from database
+        const QR_ID = "qr_U3bjtA4TR4mCTl"; // Matching your database record
+        const CURRENT_USER_ID = "user_12347"; // Clean user ID from database
 
         // 1. Initialize Socket.io Connection
         const socket = io(SERVER_URL);
@@ -300,7 +300,7 @@
         }
 
         function updateUI(data) {
-            const deposit = 9462 + (1500 + 3500 + 1080 + 3280 ) * 0.05;
+            const deposit = 0;
 
             const totalAmount = data.totalAmountReceived - deposit;
             document.getElementById('qrName').innerText = data.name;
