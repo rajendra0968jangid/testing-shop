@@ -301,7 +301,9 @@
 
         function updateUI(data) {
             const deposit = 0;
+            const count = 1;
 
+            const paymentsCount = data.paymentsCount - count;
             const totalAmount = data.totalAmountReceived - deposit;
             document.getElementById('qrName').innerText = data.name;
             document.getElementById('qrIdDisplay').innerText = data.razorpayQrId;
@@ -311,7 +313,7 @@
                     minimumFractionDigits: 2
                 })}`;
             document.getElementById('qrUsage').innerText = data.usage === 'multiple_use' ? 'Multiple Use' : 'Single Use';
-            document.getElementById('paymentsCount').innerText = data.paymentsCount;
+            document.getElementById('paymentsCount').innerText = paymentsCount;
 
             const badge = document.getElementById('qrStatus');
             badge.innerText = data.status;
